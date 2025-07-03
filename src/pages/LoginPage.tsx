@@ -1,43 +1,53 @@
+// src/pages/LoginPage.tsx
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import InputField from '@/components/InputField';
+import Button from '@/components/Button';
+import Footer from '@/components/Footer';
 
 const LoginPage = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErro('');
     try {
       await login(email, senha);
-      alert('Login realizado com sucesso!');
+      // Redirecionamento pode ser adicionado aqui
     } catch (error) {
-      alert('Erro ao fazer login');
+      setErro('E-mail ou senha inválidos');
     }
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 400, margin: '0 auto' }}>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-          style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-        />
-        <button type="submit" style={{ padding: '8px 16px' }}>Entrar</button>
-      </form>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-50 px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Login
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <InputField
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <InputField
+            label="Senha"
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+          {erro && <p className="text-red-500 text-sm">{erro}</p>}
+          <Button type="submit" className="w-full">
+            Entrar
+          </Button>
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 };
