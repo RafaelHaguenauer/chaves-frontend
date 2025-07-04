@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,9 +11,13 @@ const Sidebar = () => {
 
   return (
     <aside className="w-64 bg-white border-r p-4 shadow-md h-full">
-      <h2 className="text-xl font-bold mb-4 text-blue-700">Menu</h2>
+      <button
+        onClick={() => navigate('/home')}
+        className="text-xl font-bold text-blue-700 mb-6 hover:underline"
+      >
+        Menu
+      </button>
 
-      {/* Seção Função */}
       <div>
         <button
           className="w-full text-left font-semibold text-blue-600 hover:underline"
@@ -24,14 +27,13 @@ const Sidebar = () => {
         </button>
         {openSection === 'funcao' && (
           <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button className="text-left hover:underline">Criar</button>
-            <button className="text-left hover:underline">Alterar</button>
-            <button className="text-left hover:underline">Listar</button>
+            <button className="hover:underline">Criar</button>
+            <button className="hover:underline">Alterar</button>
+            <button className="hover:underline">Listar</button>
           </div>
         )}
       </div>
 
-      {/* Seção Funcionário */}
       <div className="mt-4">
         <button
           className="w-full text-left font-semibold text-blue-600 hover:underline"
@@ -41,12 +43,11 @@ const Sidebar = () => {
         </button>
         {openSection === 'funcionario' && (
           <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button className="text-left hover:underline">Criar</button>
-            <button className="text-left hover:underline">Alterar</button>
-            <button
-              className="text-left hover:underline"
-              onClick={() => navigate('/funcionarios')}
-            >
+            <button onClick={() => navigate('/funcionarios/criar')} className="hover:underline">
+              Criar
+            </button>
+            <button className="hover:underline">Alterar</button>
+            <button onClick={() => navigate('/funcionarios')} className="hover:underline">
               Listar
             </button>
           </div>
