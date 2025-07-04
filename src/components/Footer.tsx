@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 text-center py-6 mt-auto w-full border-t border-gray-300">
+    <footer className="bg-gray-100 text-center py-2 mt-auto w-full border-t border-gray-300">
       <div className="flex flex-col items-center gap-2">
         <img
           src="/cefet-logo.png"
@@ -12,7 +12,6 @@ const Footer = () => {
         </p>
         <p className="text-xs text-gray-600 max-w-md px-4">
           Site desenvolvido por alunos do CEFET/RJ - Unidade Maria da Graça
-          para estudos de JS, TS, REST, React, NestJS, etc.
         </p>
       </div>
     </footer>

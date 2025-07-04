@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import InputField from '@/components/InputField';
 import Button from '@/components/Button';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -25,6 +26,7 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-blue-100">
+      <Header />
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
           <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
@@ -60,7 +62,6 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
-
       <Footer />
     </div>
   );
