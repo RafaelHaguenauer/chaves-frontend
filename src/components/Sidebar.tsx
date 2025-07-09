@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
-  const [openSection, setOpenSection] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [openSection, setOpenSection] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const toggleSection = (section: string) => {
-    setOpenSection(openSection === section ? null : section);
-  };
+    setOpenSection(openSection === section ? null : section)
+  }
 
   return (
     <aside className="w-64 bg-white border-r p-4 shadow-md h-full">
@@ -27,9 +27,9 @@ const Sidebar = () => {
         </button>
         {openSection === 'funcao' && (
           <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button className="hover:underline">Criar</button>
-            <button className="hover:underline">Alterar</button>
-            <button className="hover:underline">Listar</button>
+            <button onClick={() => navigate('/funcoes/criar')} className="hover:underline">Criar</button>
+            <button onClick={() => navigate('/funcoes/alterar')} className="hover:underline">Alterar</button>
+            <button onClick={() => navigate('/funcoes')} className="hover:underline">Listar</button>
           </div>
         )}
       </div>
@@ -43,29 +43,14 @@ const Sidebar = () => {
         </button>
         {openSection === 'funcionario' && (
           <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button
-              onClick={() => navigate('/funcionarios/criar')}
-              className="hover:underline"
-            >
-              Criar
-            </button>
-            <button
-              onClick={() => navigate('/funcionarios/alterar')}
-              className="hover:underline"
-            >
-              Alterar
-            </button>
-            <button
-              onClick={() => navigate('/funcionarios')}
-              className="hover:underline"
-            >
-              Listar
-            </button>
+            <button onClick={() => navigate('/funcionarios/criar')} className="hover:underline">Criar</button>
+            <button onClick={() => navigate('/funcionarios/alterar')} className="hover:underline">Alterar</button>
+            <button onClick={() => navigate('/funcionarios')} className="hover:underline">Listar</button>
           </div>
         )}
       </div>
     </aside>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

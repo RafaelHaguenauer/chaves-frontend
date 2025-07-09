@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/contexts/AuthContext'
 import InputField from '@/components/InputField'
 import Button from '@/components/Button'
+import SelectFuncao from '@/components/SelectFuncao'
 
 const FuncionarioCreatePage = () => {
   const [nome, setNome] = useState('')
@@ -105,11 +106,11 @@ const FuncionarioCreatePage = () => {
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
-            <InputField
-              label="ID da Função"
-              type="number"
-              value={idFuncao}
-              onChange={(e) => setIdFuncao(e.target.value)}
+
+            <label className="text-sm font-semibold">Função</label>
+            <SelectFuncao
+              value={Number(idFuncao)}
+              onChange={(id) => setIdFuncao(String(id))}
             />
 
             {erro && <p className="text-red-500 text-sm">{erro}</p>}

@@ -3,8 +3,7 @@ import api from '@/services/axiosConfig'
 
 interface Funcao {
   id_funcao: number
-  nome?: string
-  descricao?: string
+  funcao: string
 }
 
 interface Props {
@@ -19,7 +18,6 @@ const SelectFuncao = ({ value, onChange }: Props) => {
     const fetchFuncoes = async () => {
       try {
         const response = await api.get('/funcoes')
-        console.log('🔍 Dados recebidos das funções:', response.data)
         if (Array.isArray(response.data)) {
           setFuncoes(response.data)
         }
@@ -40,7 +38,7 @@ const SelectFuncao = ({ value, onChange }: Props) => {
       <option value="">Selecione uma função</option>
       {funcoes.map((f) => (
         <option key={f.id_funcao} value={f.id_funcao}>
-          {f.nome || f.descricao || `Função ${f.id_funcao}`}
+          {f.funcao}
         </option>
       ))}
     </select>
