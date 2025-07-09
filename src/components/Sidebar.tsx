@@ -43,11 +43,22 @@ const Sidebar = () => {
         </button>
         {openSection === 'funcionario' && (
           <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button onClick={() => navigate('/funcionarios/criar')} className="hover:underline">
+            <button
+              onClick={() => navigate('/funcionarios/criar')}
+              className="hover:underline"
+            >
               Criar
             </button>
-            <button className="hover:underline">Alterar</button>
-            <button onClick={() => navigate('/funcionarios')} className="hover:underline">
+            <button
+              onClick={() => navigate('/funcionarios/alterar')}
+              className="hover:underline"
+            >
+              Alterar
+            </button>
+            <button
+              onClick={() => navigate('/funcionarios')}
+              className="hover:underline"
+            >
               Listar
             </button>
           </div>

@@ -27,3 +27,8 @@ button:focus,
 button:focus-visible {
   outline: 2px solid #60a5fa; /* azul claro */
 }
+
+option {
+  color: black !important;
+  background-color: white !important;
+}
