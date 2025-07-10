@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '@/services/axiosConfig'
 import DataTable from '@/components/DataTable'
 import FilterField from '@/components/FilterField'
 import Header from '@/components/Header'
@@ -18,32 +18,48 @@ interface Funcionario {
 const FuncionarioListPage = () => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([])
   const [filtroNome, setFiltroNome] = useState('')
-  const { user, logout, token } = useAuth()
+  const [totalItems, setTotalItems] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [menuAberto, setMenuAberto] = useState(false)
 
   const buscarFuncionarios = async () => {
-    try {
-      const response = await axios.get('/funcionarios', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+  const offset = (currentPage - 1) * rowsPerPage
+  console.log('[DEBUG] Chamando /funcionarios com:', { limit: rowsPerPage, offset })
 
-      if (Array.isArray(response.data)) {
-        setFuncionarios(response.data)
-        console.log('Funcionários recebidos:', response.data)
-      } else {
-        setFuncionarios([])
-      }
-    } catch (error) {
-      console.error('Erro ao buscar funcionários:', error)
+  try {
+    const response = await api.get('/funcionarios', {
+      params: {
+        limit: rowsPerPage,
+        offset,
+      },
+      paramsSerializer: (params) => {
+        return Object.entries(params)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&')
+      },
+    })
+
+    console.log('[DEBUG] Resposta da API:', response.data)
+
+    if (response.data && Array.isArray(response.data.rows)) {
+      setFuncionarios(response.data.rows)
+      setTotalItems(response.data.count)
+    }else {
+      setFuncionarios([])
+      setTotalItems(0)
     }
+  } catch (error) {
+    console.error('Erro ao buscar funcionários:', error)
+  }
   }
 
   useEffect(() => {
     buscarFuncionarios()
-  }, [])
+  }, [currentPage, rowsPerPage])
 
   const funcionariosFiltrados = funcionarios.filter((f) =>
     f.nome.toLowerCase().includes(filtroNome.toLowerCase())
@@ -108,6 +124,14 @@ const FuncionarioListPage = () => {
                 render: (value: boolean) => (value ? 'Sim' : 'Não'),
               },
             ]}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalItems={totalItems}
+            onPageChange={(page) => setCurrentPage(page)}
+            onRowsPerPageChange={(rows) => {
+              setRowsPerPage(rows)
+              setCurrentPage(1)
+            }}
           />
         </main>
       </div>

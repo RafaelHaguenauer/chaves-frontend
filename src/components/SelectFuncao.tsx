@@ -14,26 +14,29 @@ interface Props {
 const SelectFuncao = ({ value, onChange }: Props) => {
   const [funcoes, setFuncoes] = useState<Funcao[]>([])
 
-  useEffect(() => {
-    const fetchFuncoes = async () => {
-      try {
-        const response = await api.get('/funcoes')
-        if (Array.isArray(response.data)) {
-          setFuncoes(response.data)
-        }
-      } catch (error) {
-        console.error('Erro ao buscar funções:', error)
-      }
-    }
+  const buscarFuncoes = async () => {
+    try {
+      const response = await api.get('/funcoes', {
+        params: { limit: 1000, offset: 0 },
+      })
 
-    fetchFuncoes()
+      if (response.data && Array.isArray(response.data.rows)) {
+        setFuncoes(response.data.rows)
+      }
+    } catch (error) {
+      console.error('Erro ao carregar funções:', error)
+    }
+  }
+
+  useEffect(() => {
+    buscarFuncoes()
   }, [])
 
   return (
     <select
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full border p-2 rounded"
+      className="w-full p-2 border rounded"
     >
       <option value="">Selecione uma função</option>
       {funcoes.map((f) => (

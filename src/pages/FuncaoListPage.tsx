@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import api from '@/services/axiosConfig'
+import DataTable from '@/components/DataTable'
+import FilterField from '@/components/FilterField'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
-import FilterField from '@/components/FilterField'
-import DataTable from '@/components/DataTable'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
@@ -15,19 +15,32 @@ interface Funcao {
 }
 
 const FuncaoListPage = () => {
+  const [funcoes, setFuncoes] = useState<Funcao[]>([])
+  const [filtroNome, setFiltroNome] = useState('')
+  const [totalItems, setTotalItems] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [menuAberto, setMenuAberto] = useState(false)
-  const [funcoes, setFuncoes] = useState<Funcao[]>([])
-  const [filtroFuncao, setFiltroFuncao] = useState('')
 
   const buscarFuncoes = async () => {
     try {
-      const response = await api.get('/funcoes')
-      if (Array.isArray(response.data)) {
-        setFuncoes(response.data)
+      const offset = (currentPage - 1) * rowsPerPage
+      const response = await api.get('/funcoes', {
+        params: {
+          limit: rowsPerPage,
+          offset,
+        },
+      })
+
+      if (response.data && Array.isArray(response.data.rows)) {
+        setFuncoes(response.data.rows)
+        setTotalItems(response.data.count)
       } else {
         setFuncoes([])
+        setTotalItems(0)
       }
     } catch (error) {
       console.error('Erro ao buscar funções:', error)
@@ -36,22 +49,24 @@ const FuncaoListPage = () => {
 
   useEffect(() => {
     buscarFuncoes()
-  }, [])
+  }, [currentPage, rowsPerPage])
 
   const funcoesFiltradas = funcoes.filter((f) =>
-    f.funcao?.toLowerCase().includes(filtroFuncao.toLowerCase())
+    f.funcao.toLowerCase().includes(filtroNome.toLowerCase())
   )
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-blue-100">
       <Header />
 
       <div className="flex flex-1">
         <Sidebar />
 
-        <main className="flex-1 p-6 bg-blue-100">
+        <main className="flex-1 p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-blue-700">Lista de Funções</h1>
+            <h1 className="text-2xl font-bold text-blue-700">
+              Lista de Funções
+            </h1>
 
             <div className="relative">
               <button
@@ -78,15 +93,14 @@ const FuncaoListPage = () => {
           </div>
 
           <FilterField
-            label="Filtrar por função"
-            value={filtroFuncao}
-            onChange={(e) => setFiltroFuncao(e.target.value)}
+            label="Filtrar por nome da função"
+            value={filtroNome}
+            onChange={(e) => setFiltroNome(e.target.value)}
           />
 
           <DataTable
             data={funcoesFiltradas.map((f) => ({
-              funcao: f.funcao ?? '',
-              setor: f.setor ?? '',
+              ...f,
               is_active: f.ativo === 1,
             }))}
             columns={[
@@ -98,6 +112,14 @@ const FuncaoListPage = () => {
                 render: (value: boolean) => (value ? 'Sim' : 'Não'),
               },
             ]}
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalItems={totalItems}
+            onPageChange={(page) => setCurrentPage(page)}
+            onRowsPerPageChange={(rows) => {
+              setRowsPerPage(rows)
+              setCurrentPage(1)
+            }}
           />
         </main>
       </div>

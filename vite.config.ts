@@ -12,25 +12,29 @@ export default defineConfig({
   server: {
     port: 3002,
     proxy: {
-      '/auth': {
+      '^/auth': {
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
+        // rewrite: (path) => path,
       },
-      '/usuarios': {
+      '^/usuarios': {
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
+        // rewrite: (path) => path,
       },
-      '/funcionarios': {
+      '^/funcionarios': {
         target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
+        // rewrite: (path) => path,
       },
-      '/funcoes': {
+      '^/funcoes': {
         target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
+        // rewrite: (path) => path,
       },
     },
   },
