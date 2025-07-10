@@ -1,98 +1,98 @@
-import { useState } from 'react';
-import InputField from '@/components/InputField';
-import Button from '@/components/Button';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { useRegister } from '@/contexts/RegisterContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import HeaderLogin from '@/components/HeaderLogin'
+import axios from 'axios'
 
 const RegisterPage = () => {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [erro, setErro] = useState('');
-  const [sucesso, setSucesso] = useState('');
-  const navigate = useNavigate();
-  const { register } = useRegister();
+  const navigate = useNavigate()
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [erro, setErro] = useState('')
+  const [sucesso, setSucesso] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErro('');
-    setSucesso('');
-
-    if (!nome || !email || !senha || !confirmarSenha) {
-      setErro('Todos os campos são obrigatórios');
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      setErro('As senhas não coincidem');
-      return;
-    }
+    e.preventDefault()
+    setErro('')
+    setSucesso('')
 
     try {
-      await register(nome, email, senha);
-      setSucesso('Usuário criado com sucesso!');
-      setTimeout(() => navigate('/login'), 1500);
+      await axios.post('/usuarios', { nome, email, senha })
+      setSucesso('Conta criada com sucesso!')
+      setTimeout(() => navigate('/login'), 1500)
     } catch (error: any) {
-      setErro(error.message || 'Erro ao criar conta');
+      setErro(error.response?.data?.message || 'Erro ao criar conta.')
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-blue-100">
-      <Header />
-      <div className="flex-grow flex items-center justify-center px-4">
-        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-          <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
-            Criar Conta
-          </h1>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">
+      <HeaderLogin />
+
+      <main className="flex-1 flex items-center justify-center px-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-200">
+          <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
+            Criar nova conta
+          </h2>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <InputField
-              label="Nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-            <InputField
-              label="E-mail"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <InputField
-              label="Senha"
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-            <InputField
-              label="Confirmar Senha"
-              type="password"
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
-            />
-            {erro && <p className="text-red-500 text-sm">{erro}</p>}
-            {sucesso && <p className="text-green-600 text-sm">{sucesso}</p>}
-            <Button type="submit" className="w-full">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Nome
+              </label>
+              <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                E-mail
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Senha
+              </label>
+              <input
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+
+            {erro && <p className="text-red-500 text-sm text-center">{erro}</p>}
+            {sucesso && <p className="text-green-600 text-sm text-center">{sucesso}</p>}
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            >
               Cadastrar
-            </Button>
+            </button>
           </form>
 
-          <p className="mt-4 text-sm text-center">
+          <p className="text-sm text-center mt-6 text-gray-700">
             Já possui uma conta?{' '}
-            <span
-              className="text-blue-600 hover:underline cursor-pointer"
-              onClick={() => navigate('/login')}
-            >
-              Entrar
-            </span>
+            <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+              Faça login
+            </Link>
           </p>
         </div>
-      </div>
-      <Footer />
+      </main>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterPage;
+export default RegisterPage

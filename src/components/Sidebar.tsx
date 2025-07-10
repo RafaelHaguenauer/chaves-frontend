@@ -1,54 +1,84 @@
+import { useLocation, Link } from 'react-router-dom'
+import {
+  FaHome,
+  FaUsers,
+  FaUserPlus,
+  FaEdit,
+  FaClipboardList,
+  FaPlus,
+  FaPen,
+} from 'react-icons/fa'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
-  const [openSection, setOpenSection] = useState<string | null>(null)
-  const navigate = useNavigate()
+  const location = useLocation()
+  const [aberto, setAberto] = useState(false)
 
-  const toggleSection = (section: string) => {
-    setOpenSection(openSection === section ? null : section)
-  }
+  const linkClass = (path: string) =>
+    `flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+      location.pathname === path
+        ? 'bg-blue-600 text-white font-semibold'
+        : 'text-gray-700 hover:bg-blue-100 hover:text-blue-700'
+    }`
 
   return (
-    <aside className="w-64 bg-white border-r p-4 shadow-md h-full">
-      <button
-        onClick={() => navigate('/home')}
-        className="text-xl font-bold text-blue-700 mb-6 hover:underline"
-      >
-        Menu
-      </button>
+    <aside
+      className={`transition-all duration-300 ease-in-out ${
+        aberto ? 'w-64' : 'w-20'
+      } bg-white border-r shadow-md min-h-screen p-3`}
+      onMouseEnter={() => setAberto(true)}
+      onMouseLeave={() => setAberto(false)}
+    >
+      <nav className="space-y-4">
+        <Link to="/home" className={linkClass('/home')}>
+          <FaHome size={20} />
+          {aberto && <span>Início</span>}
+        </Link>
 
-      <div>
-        <button
-          className="w-full text-left font-semibold text-blue-600 hover:underline"
-          onClick={() => toggleSection('funcao')}
-        >
-          Função
-        </button>
-        {openSection === 'funcao' && (
-          <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button onClick={() => navigate('/funcoes/criar')} className="hover:underline">Criar</button>
-            <button onClick={() => navigate('/funcoes/alterar')} className="hover:underline">Alterar</button>
-            <button onClick={() => navigate('/funcoes')} className="hover:underline">Listar</button>
+        <div>
+          {aberto && (
+            <h2 className="text-gray-500 text-xs font-semibold uppercase mb-2 ml-2">
+              Funcionário
+            </h2>
+          )}
+          <div className="space-y-2 ml-1">
+            <Link to="/funcionarios" className={linkClass('/funcionarios')}>
+              <FaUsers size={18} />
+              {aberto && <span>Listar</span>}
+            </Link>
+            <Link to="/funcionarios/criar" className={linkClass('/funcionarios/criar')}>
+              <FaUserPlus size={18} />
+              {aberto && <span>Criar</span>}
+            </Link>
+            <Link to="/funcionarios/alterar" className={linkClass('/funcionarios/alterar')}>
+              <FaEdit size={18} />
+              {aberto && <span>Alterar</span>}
+            </Link>
           </div>
-        )}
-      </div>
+        </div>
 
-      <div className="mt-4">
-        <button
-          className="w-full text-left font-semibold text-blue-600 hover:underline"
-          onClick={() => toggleSection('funcionario')}
-        >
-          Funcionário
-        </button>
-        {openSection === 'funcionario' && (
-          <div className="ml-4 mt-2 flex flex-col gap-1 text-sm text-gray-700">
-            <button onClick={() => navigate('/funcionarios/criar')} className="hover:underline">Criar</button>
-            <button onClick={() => navigate('/funcionarios/alterar')} className="hover:underline">Alterar</button>
-            <button onClick={() => navigate('/funcionarios')} className="hover:underline">Listar</button>
+        <div>
+          {aberto && (
+            <h2 className="text-gray-500 text-xs font-semibold uppercase mb-2 ml-2">
+              Função
+            </h2>
+          )}
+          <div className="space-y-2 ml-1">
+            <Link to="/funcoes" className={linkClass('/funcoes')}>
+              <FaClipboardList size={18} />
+              {aberto && <span>Listar</span>}
+            </Link>
+            <Link to="/funcoes/criar" className={linkClass('/funcoes/criar')}>
+              <FaPlus size={18} />
+              {aberto && <span>Criar</span>}
+            </Link>
+            <Link to="/funcoes/alterar" className={linkClass('/funcoes/alterar')}>
+              <FaPen size={18} />
+              {aberto && <span>Alterar</span>}
+            </Link>
           </div>
-        )}
-      </div>
+        </div>
+      </nav>
     </aside>
   )
 }

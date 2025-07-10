@@ -14,28 +14,28 @@ interface Props {
 const SelectFuncionario = ({ value, onChange }: Props) => {
   const [funcionarios, setFuncionarios] = useState<Funcionario[]>([])
 
-  useEffect(() => {
-    const fetchFuncionarios = async () => {
-      try {
-        const response = await api.get('/funcionarios')
-        if (Array.isArray(response.data)) {
-          setFuncionarios(response.data)
-        } else {
-          setFuncionarios([])
-        }
-      } catch (error) {
-        console.error('Erro ao buscar funcionários:', error)
+  const buscarFuncionarios = async () => {
+    try {
+      const response = await api.get('/funcionarios', {
+        params: { limit: 1000, offset: 0 },
+      })
+      if (response.data && Array.isArray(response.data.rows)) {
+        setFuncionarios(response.data.rows)
       }
+    } catch (error) {
+      console.error('Erro ao carregar funcionários:', error)
     }
+  }
 
-    fetchFuncionarios()
+  useEffect(() => {
+    buscarFuncionarios()
   }, [])
 
   return (
     <select
-      value={value || ''}
+      value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="w-full border p-2 rounded"
+      className="w-full p-2 border rounded"
     >
       <option value="">Selecione um funcionário</option>
       {funcionarios.map((f) => (

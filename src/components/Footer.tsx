@@ -1,21 +1,21 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 text-center py-2 mt-auto w-full border-t border-gray-300">
-      <div className="flex flex-col items-center gap-2">
+    <footer className="bg-gray-100 text-center py-1 mt-auto w-full border-t border-gray-300">
+      <div className="flex flex-col items-center gap-1">
         <img
           src="/cefet-logo.png"
           alt="Logo CEFET"
-          className="h-12 object-contain"
+          className="h-8 object-contain"
         />
-        <p className="text-sm text-gray-800 font-semibold">
-          Grupo: Rafael Moura, Junior Santos, Eikei Vieira e João Pedro
+        <p className="text-xs text-gray-700 font-medium">
+          Rafael Moura, Junior Santos, Eikei Vieira e João Pedro
         </p>
-        <p className="text-xs text-gray-600 max-w-md px-4">
-          Site desenvolvido por alunos do CEFET/RJ - Unidade Maria da Graça
+        <p className="text-xs text-gray-500">
+          CEFET/RJ - Unidade Maria da Graça
         </p>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
