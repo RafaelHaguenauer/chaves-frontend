@@ -7,6 +7,7 @@ import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import LoadingScreen from '@/components/LoadingScreen'
+import ExportCSVButton from '@/components/ExportCSVButton'
 
 interface Funcionario {
   id_funcionario: number
@@ -90,6 +91,8 @@ const FuncionarioListPage = () => {
             value={filtroNome}
             onChange={(e) => setFiltroNome(e.target.value)}
           />
+
+          <ExportCSVButton data={funcionarios} filename="funcionarios.csv" />
 
           <DataTable
             data={funcionariosFiltrados.map((f) => ({
