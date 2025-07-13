@@ -5,6 +5,7 @@ import FilterField from '@/components/FilterField'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/contexts/AuthContext'
+import LoadingScreen from '@/components/LoadingScreen'
 
 interface Funcao {
   id_funcao: number
@@ -19,10 +20,12 @@ const FuncaoListPage = () => {
   const [totalItems, setTotalItems] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [loading, setLoading] = useState(true)
 
   const { user } = useAuth()
 
   const buscarFuncoes = async () => {
+    setLoading(true) // inicia loading
     try {
       const offset = (currentPage - 1) * rowsPerPage
       const response = await api.get('/funcoes', {
@@ -41,6 +44,8 @@ const FuncaoListPage = () => {
       }
     } catch (error) {
       console.error('Erro ao buscar funções:', error)
+    } finally {
+      setLoading(false) // termina loading
     }
   }
 
@@ -51,6 +56,8 @@ const FuncaoListPage = () => {
   const funcoesFiltradas = funcoes.filter((f) =>
     f.funcao.toLowerCase().includes(filtroNome.toLowerCase())
   )
+
+  if (loading) return <LoadingScreen /> // mostra o loading
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">

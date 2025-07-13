@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import api from '@/services/axiosConfig'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
+import LoadingScreen from '@/components/LoadingScreen'
 
 type FuncionarioResumido = {
   id: number
@@ -36,6 +37,8 @@ const FuncaoSearchPage = () => {
     buscarDados()
   }, [])
 
+  if (carregando) return <LoadingScreen /> // tela de loading
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">
       <Header />
@@ -47,9 +50,7 @@ const FuncaoSearchPage = () => {
             Busca por Função com Funcionários
           </h1>
 
-          {carregando ? (
-            <p className="text-blue-700">Carregando...</p>
-          ) : erro ? (
+          {erro ? (
             <p className="text-red-600">{erro}</p>
           ) : (
             <div className="space-y-6">

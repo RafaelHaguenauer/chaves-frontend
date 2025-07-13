@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import LoadingScreen from '@/components/LoadingScreen'
 
 interface Funcionario {
   id_funcionario: number
@@ -21,11 +22,13 @@ const FuncionarioListPage = () => {
   const [totalItems, setTotalItems] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [loading, setLoading] = useState(true)
 
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
   const buscarFuncionarios = async () => {
+    setLoading(true)
     const offset = (currentPage - 1) * rowsPerPage
     console.log('[DEBUG] Chamando /funcionarios com:', { limit: rowsPerPage, offset })
 
@@ -53,6 +56,8 @@ const FuncionarioListPage = () => {
       }
     } catch (error) {
       console.error('Erro ao buscar funcionários:', error)
+    } finally {
+      setLoading(false) 
     }
   }
 
@@ -63,6 +68,8 @@ const FuncionarioListPage = () => {
   const funcionariosFiltrados = funcionarios.filter((f) =>
     f.nome.toLowerCase().includes(filtroNome.toLowerCase())
   )
+
+  if (loading) return <LoadingScreen /> // mostra a tela de loading
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">

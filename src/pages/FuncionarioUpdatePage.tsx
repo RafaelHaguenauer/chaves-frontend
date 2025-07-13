@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import SelectFuncionario from '@/components/SelectFuncionario'
 import SelectFuncao from '@/components/SelectFuncao'
+import LoadingScreen from '@/components/LoadingScreen' // importe o componente
 
 const FuncionarioUpdatePage = () => {
   const { user, logout } = useAuth()
@@ -20,10 +21,12 @@ const FuncionarioUpdatePage = () => {
 
   const [mensagemSucesso, setMensagemSucesso] = useState('')
   const [mensagemErro, setMensagemErro] = useState('')
+  const [loading, setLoading] = useState(false) // estado de loading
 
   useEffect(() => {
     const carregarFuncionario = async () => {
       if (!selectedId) return
+      setLoading(true) // inicia loading
       try {
         const response = await api.get(`/funcionarios/${selectedId}`)
         const f = response.data
@@ -36,11 +39,16 @@ const FuncionarioUpdatePage = () => {
       } catch (error) {
         console.error('Erro ao carregar funcionário:', error)
         setMensagemErro('Erro ao carregar funcionário.')
+      } finally {
+        setLoading(false) // termina loading
       }
     }
 
     carregarFuncionario()
   }, [selectedId])
+
+  // Mostra a tela de loading enquanto carrega
+  if (loading) return <LoadingScreen />
 
   const salvar = async () => {
     try {

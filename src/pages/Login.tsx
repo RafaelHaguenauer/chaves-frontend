@@ -1,13 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { login } from '../services/auth'
 import { useNavigate } from 'react-router-dom'
+import LoadingScreen from '@/components/LoadingScreen'
 
 export default function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true) // começa como true
+
+  useEffect(() => {
+    // Mostra o loading por 4 segundos ao abrir/recarregar a página
+    const timer = setTimeout(() => setLoading(false), 4000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,6 +31,8 @@ export default function Login() {
       setErro(result.error)
     }
   }
+
+  if (loading) return <LoadingScreen /> // tela de loading
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
