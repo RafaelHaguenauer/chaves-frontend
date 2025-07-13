@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import LoadingScreen from '@/components/LoadingScreen'
 import ExportCSVButton from '@/components/ExportCSVButton'
+import SortableDataTable from '@/components/SortableDataTable'
 
 interface Funcionario {
   id_funcionario: number
@@ -71,6 +72,18 @@ const FuncionarioListPage = () => {
   )
 
   if (loading) return <LoadingScreen /> // mostra a tela de loading
+
+  const data = funcionariosFiltrados.map((f) => ({
+    id: f.id_funcionario,
+    nome: f.nome,
+    email: f.email,
+  }))
+
+  const columns = [
+    { key: 'id', label: 'ID' },
+    { key: 'nome', label: 'Nome' },
+    { key: 'email', label: 'E-mail' },
+  ]
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">

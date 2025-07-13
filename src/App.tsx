@@ -1,22 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import RouteLoading from '@/components/RouteLoading'
 import Login from '@/pages/Login'
 import HomePage from '@/pages/HomePage'
-import LoadingPage from '@/pages/LoadingPage'
 
-const App = () => {
-  const [loading, setLoading] = useState(true)
-  const location = useLocation()
-
-  useEffect(() => {
-    setLoading(true)
-    const timer = setTimeout(() => setLoading(false), 1000)
-    return () => clearTimeout(timer)
-  }, [location.pathname])
-
-  if (loading) return <LoadingPage />
-
+function App() {
   return (
     <BrowserRouter>
       <RouteLoading>
