@@ -17,7 +17,7 @@ import RelatorioListPage from "../pages/RelatorioListPage";
 import RelatorioCreatePage from "../pages/RelatorioCreatePage";
 import RelatorioUpdatePage from "../pages/RelatorioUpdatePage";
 
-//modificação do JP para importar as páginas de Equipamento
+//modificação do JP para importar as páginas de Equipamento e Relatório
 
 const AppRoutes = () => {
   return (

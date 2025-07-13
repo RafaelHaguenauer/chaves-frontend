@@ -1,53 +1,64 @@
 import { useEffect, useState } from "react";
-import { getRelatorios } from "../services/relatorio";
-import { Button } from "../components/Button";
-import { DataTable } from "../components/DataTable";
+import { getRelatorios, deleteRelatorio } from "../services/relatorio";
+import { Relatorio } from "../types/Relatorio";
+import DataTable, { Column } from "../components/DataTable";
+import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 
+
 const RelatorioListPage = () => {
-  const [relatorios, setRelatorios] = useState([]);
+  const [relatorios, setRelatorios] = useState<Relatorio[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRelatorios = async () => {
+    const fetchData = async () => {
       const data = await getRelatorios();
       setRelatorios(data);
     };
-    fetchRelatorios();
+    fetchData();
   }, []);
 
-  const handleCreate = () => {
-    navigate("/relatorios/novo");
+  const handleDelete = async (id: number) => {
+    const confirm = window.confirm("Tem certeza que deseja deletar?");
+    if (!confirm) return;
+
+    await deleteRelatorio(id);
+    setRelatorios((prev) => prev.filter((r) => r.id !== id));
   };
 
-  const handleEdit = (id: number) => {
-    navigate(`/relatorios/${id}/editar`);
-  };
-
-  const columns = [
+  const columns: Column<Relatorio>[] = [
     { label: "ID", accessor: "id" },
     { label: "Título", accessor: "titulo" },
-    { label: "Tipo", accessor: "tipo" },
-    { label: "Descrição", accessor: "descricao" },
-    { label: "Criado em", accessor: "dataCriacao" },
+    { label: "Criado em", accessor: "createdAt" },
     {
       label: "Ações",
-      render: (item: any) => (
+      render: (item: Relatorio) => (
         <div className="flex gap-2">
-          <Button onClick={() => handleEdit(item.id)}>Editar</Button>
-          <Button variant="danger">Excluir</Button>
+          <Button onClick={() => navigate(`/relatorios/edit/${item.id}`)}>
+            Editar
+          </Button>
+          <Button onClick={() => handleDelete(item.id)}>Excluir</Button>
         </div>
       ),
+      accessor: "id"
     },
   ];
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Relatórios</h1>
-        <Button onClick={handleCreate}>Novo Relatório</Button>
+      <h1 className="text-2xl font-bold mb-4">Relatórios</h1>
+      <Button onClick={() => navigate("/relatorios/new")}>Novo Relatório</Button>
+      <div className="mt-4">
+        <DataTable
+          data={relatorios}
+          columns={columns}
+          currentPage={1}
+          rowsPerPage={10}
+          totalItems={relatorios.length}
+          onPageChange={(page) => console.log("Página:", page)}
+          onRowsPerPageChange={(rows) => console.log("Linhas por página:", rows)}
+        />
       </div>
-      <DataTable data={relatorios} columns={columns} />
     </div>
   );
 };

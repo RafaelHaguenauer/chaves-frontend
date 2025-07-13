@@ -1,37 +1,35 @@
 import { useState } from "react";
-import { createRelatorio } from "../services/relatorio";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
+import { createRelatorio } from "../services/relatorio";
+import Button from "../components/Button";
 
 const RelatorioCreatePage = () => {
   const [titulo, setTitulo] = useState("");
-  const [tipo, setTipo] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [conteudo, setConteudo] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const relatorioData = {
+    const data = {
       titulo,
-      tipo,
       descricao,
-      conteudo: conteudo ? JSON.parse(conteudo) : undefined,
+      tipo: "Operacional", //tipei como exemplo
+      conteudo: "",
+      ativo: true,
+      dataCriacao: new Date().toISOString(),
     };
 
     try {
-      await createRelatorio(relatorioData);
+      await createRelatorio(data);
       navigate("/relatorios");
     } catch (error) {
       console.error("Erro ao criar relatório:", error);
-      alert("Erro ao salvar relatório.");
     }
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Novo Relatório</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -40,37 +38,21 @@ const RelatorioCreatePage = () => {
             type="text"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
-            className="border p-2 w-full"
+            className="w-full border border-gray-300 p-2 rounded"
             required
           />
         </div>
-        <div>
-          <label className="block font-medium">Tipo</label>
-          <input
-            type="text"
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
-            className="border p-2 w-full"
-            required
-          />
-        </div>
+
         <div>
           <label className="block font-medium">Descrição</label>
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            className="border p-2 w-full"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Conteúdo (JSON opcional)</label>
-          <textarea
-            value={conteudo}
-            onChange={(e) => setConteudo(e.target.value)}
-            className="border p-2 w-full font-mono"
+            className="w-full border border-gray-300 p-2 rounded"
             rows={4}
           />
         </div>
+
         <Button type="submit">Salvar</Button>
       </form>
     </div>

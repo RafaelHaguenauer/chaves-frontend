@@ -1,26 +1,31 @@
+import { Relatorio } from "../types/Relatorio";
 import api from "./axiosConfig";
 
-export const getRelatorios = async () => {
-  const response = await api.get("/relatorio");
-  return response.data;
+export const getRelatorios = async (): Promise<Relatorio[]> => {
+  const res = await api.get("/relatorios");
+  return res.data;
 };
 
-export const getRelatorioById = async (id: number) => {
-  const response = await api.get(`/relatorio/${id}`);
-  return response.data;
+export const getRelatorioById = async (id: number): Promise<Relatorio> => {
+  const res = await api.get(`/relatorios/${id}`);
+  return res.data;
 };
 
-export const createRelatorio = async (data: any) => {
-  const response = await api.post("/relatorio", data);
-  return response.data;
+export const createRelatorio = async (
+  data: Omit<Relatorio, "id" | "createdAt" | "updatedAt">
+): Promise<Relatorio> => {
+  const res = await api.post("/relatorios", data);
+  return res.data;
 };
 
-export const updateRelatorio = async (id: number, data: any) => {
-  const response = await api.patch(`/relatorio/${id}`, data);
-  return response.data;
+export const updateRelatorio = async (
+  id: number,
+  data: Omit<Relatorio, "id" | "createdAt" | "updatedAt">
+): Promise<Relatorio> => {
+  const res = await api.put(`/relatorios/${id}`, data);
+  return res.data;
 };
 
-export const deleteRelatorio = async (id: number) => {
-  const response = await api.delete(`/relatorio/${id}`);
-  return response.data;
+export const deleteRelatorio = async (id: number): Promise<void> => {
+  await api.delete(`/relatorios/${id}`);
 };
