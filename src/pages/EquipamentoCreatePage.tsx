@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createEquipamento } from "../services/equipamento";
-import Button from "../components/Button";//uso do export default está dando erro no uso das { }, por isso removi as chaves
+import Button from "../components/Button";
 
 const EquipamentoCreatePage = () => {
   const [nome, setNome] = useState("");
   const [modelo, setModelo] = useState("");
   const [numeroSerie, setNumeroSerie] = useState("");
+  const [idLocal, setIdLocal] = useState("1");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,7 +18,9 @@ const EquipamentoCreatePage = () => {
       nome,
       modelo,
       numeroSerie,
-      ativo: 1, // valor fixo por enquanto
+      ativo: true,
+      falha: false,
+      id_local: Number(idLocal),
     };
 
     await createEquipamento(data);
@@ -56,6 +60,18 @@ const EquipamentoCreatePage = () => {
             onChange={(e) => setNumeroSerie(e.target.value)}
             className="w-full border border-gray-300 p-2 rounded"
           />
+        </div>
+
+        <div>
+          <label className="block font-medium">Local</label>
+          <select
+            value={idLocal}
+            onChange={(e) => setIdLocal(e.target.value)}
+            className="w-full border border-gray-300 p-2 rounded"
+          >
+            <option value="1">Sala Técnica</option>
+            <option value="2">Painel Principal</option>
+          </select>
         </div>
 
         <Button type="submit">Salvar</Button>

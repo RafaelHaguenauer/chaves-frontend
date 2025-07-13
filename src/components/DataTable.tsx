@@ -1,6 +1,6 @@
 import React from 'react'
 
-type Column<T> = {
+export type Column<T> = { // modificação João para exportar o tipo Column
   label: string
   accessor: keyof T
   render?: (value: any, row: T) => React.ReactNode
