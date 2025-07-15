@@ -1,8 +1,20 @@
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import { BookOpen, Users, Code } from 'lucide-react'
+import LoadingScreen from '@/components/LoadingScreen'
 
 const HomePage = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Simula carregamento inicial
+    const timer = setTimeout(() => setLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (loading) return <LoadingScreen />
+
   return (
     <div className="min-h-screen flex flex-col bg-blue-100">
       <Header />

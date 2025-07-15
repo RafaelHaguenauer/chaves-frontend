@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import HeaderLogin from '@/components/HeaderLogin'
 import InputField from '@/components/InputField'
 import Button from '@/components/Button'
+import LoadingScreen from '@/components/LoadingScreen' 
 
 const LoginPage = () => {
   const { login } = useAuth()
@@ -11,17 +12,23 @@ const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
+  const [loading, setLoading] = useState(false) // estado de loading
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setErro('')
+    setLoading(true)
     try {
       await login(email, senha)
       navigate('/home')
     } catch {
       setErro('E-mail ou senha inválidos')
+    } finally {
+      setLoading(false)
     }
   }
+
+  if (loading) return <LoadingScreen /> // tela de loading
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-white to-blue-200">

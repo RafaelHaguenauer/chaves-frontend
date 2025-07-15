@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import SelectFuncao from '@/components/SelectFuncao'
+import LoadingScreen from '@/components/LoadingScreen'
 
 const FuncaoUpdatePage = () => {
   const { user, logout } = useAuth()
@@ -18,10 +19,12 @@ const FuncaoUpdatePage = () => {
 
   const [mensagemSucesso, setMensagemSucesso] = useState('')
   const [mensagemErro, setMensagemErro] = useState('')
+  const [loading, setLoading] = useState(false) // estado de loading
 
   useEffect(() => {
     const carregarFuncao = async () => {
       if (!selectedId) return
+      setLoading(true) // inicia loading
       try {
         const response = await api.get(`/funcoes/${selectedId}`)
         const f = response.data
@@ -33,11 +36,16 @@ const FuncaoUpdatePage = () => {
       } catch (error) {
         console.error('Erro ao carregar função:', error)
         setMensagemErro('Erro ao carregar função.')
+      } finally {
+        setLoading(false) // termina loading
       }
     }
 
     carregarFuncao()
   }, [selectedId])
+
+  // Mostra a tela de loading enquanto carrega
+  if (loading) return <LoadingScreen />
 
   const salvar = async () => {
     try {
